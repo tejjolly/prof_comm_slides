@@ -114,34 +114,49 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      overflow: hidden;
     }
 
-    .visual-label {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
+    .slide-visual img,
+    .slide-visual video {
+      width: 100%;
+      max-height: 100%;
+      border-radius: 12px;
+      display: block;
+      object-fit: contain;
+      background: #05060a;
     }
 
-    .visual-main {
-      font-size: 0.9rem;
-      margin-bottom: 0.6rem;
-    }
-
-    .visual-bullets {
-      margin: 0.2rem 0 0.2rem 1rem;
-      padding: 0;
-    }
-
-    .visual-bullets li {
-      margin-bottom: 0.25rem;
-    }
-
-    .visual-note {
+    .visual-caption {
       font-size: 0.78rem;
       color: #7b7f90;
-      margin-top: 0.4rem;
+      margin-top: 0.45rem;
+    }
+
+    .mesh-strip {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mesh-strip img {
+      flex: 1 1 0;
+      max-width: 33%;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .placeholder-box {
+      border-radius: 12px;
+      border: 1px dashed rgba(255, 255, 255, 0.25);
+      background: rgba(15, 16, 24, 0.7);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: #8a8da0;
     }
 
     .nav-hint {
@@ -206,7 +221,7 @@
 <body>
 
 <div class="deck">
-  <!-- Slide 1 -->
+  <!-- Slide 1: Hook -->
   <section class="slide active">
     <div class="slide-header">
       <div>
@@ -227,18 +242,9 @@
         </p>
       </div>
       <div class="slide-visual">
-        <div>
-          <div class="visual-label">Suggested visual</div>
-          <div class="visual-main">
-            Side-by-side comparison:
-          </div>
-          <ul class="visual-bullets">
-            <li>Left: a sharp streak of dye in water (photo or drawing).</li>
-            <li>Right: the same streak with a noticeable blur applied.</li>
-          </ul>
-          <div class="visual-note">
-            Use this to introduce the idea that “pretty” doesn’t always mean “physically correct.”
-          </div>
+        <img src="dissipation.png" alt="Sharp vs smeared fluid features due to dissipation">
+        <div class="visual-caption">
+          Example of a flow feature becoming more diffuse as it is transported.
         </div>
       </div>
     </div>
@@ -246,7 +252,7 @@
     <div class="slide-number">1 / 5</div>
   </section>
 
-  <!-- Slide 2 -->
+  <!-- Slide 2: Grid explanation -->
   <section class="slide">
     <div class="slide-header">
       <div>
@@ -267,18 +273,13 @@
         </p>
       </div>
       <div class="slide-visual">
-        <div>
-          <div class="visual-label">Suggested visual</div>
-          <div class="visual-main">
-            Cartoon of a pipe or rectangular domain overlaid with a square grid.
-          </div>
-          <ul class="visual-bullets">
-            <li>Draw a 5×5 or 8×8 grid; mark one cell as an example control volume.</li>
-            <li>Add small arrows in a few cells to show averaged velocities.</li>
-          </ul>
-          <div class="visual-note">
-            The goal is to make the “grid of boxes with averages” idea intuitive without any equations.
-          </div>
+        <div class="mesh-strip">
+          <img src="mesh1.png" alt="Example CFD mesh 1">
+          <img src="mesh2.png" alt="Example CFD mesh 2">
+          <img src="mesh3.jpg" alt="Example CFD mesh 3">
+        </div>
+        <div class="visual-caption">
+          Different mesh layouts used to break a flow domain into many small cells.
         </div>
       </div>
     </div>
@@ -286,7 +287,7 @@
     <div class="slide-number">2 / 5</div>
   </section>
 
-  <!-- Slide 3 -->
+  <!-- Slide 3: Smearing origin -->
   <section class="slide">
     <div class="slide-header">
       <div>
@@ -307,18 +308,9 @@
         </p>
       </div>
       <div class="slide-visual">
-        <div>
-          <div class="visual-label">Suggested visual</div>
-          <div class="visual-main">
-            1D plot of concentration vs. distance:
-          </div>
-          <ul class="visual-bullets">
-            <li>Black curve: an ideal “top-hat” with vertical sides.</li>
-            <li>Red curve: a rounded, smeared version after several time steps.</li>
-          </ul>
-          <div class="visual-note">
-            Label the curves “ideal” and “numerically diffused” to make the comparison explicit.
-          </div>
+        <video src="false_diffusion.mp4" controls muted loop></video>
+        <div class="visual-caption">
+          Example of a sharp feature becoming smeared over time by numerical diffusion.
         </div>
       </div>
     </div>
@@ -326,7 +318,7 @@
     <div class="slide-number">3 / 5</div>
   </section>
 
-  <!-- Slide 4 -->
+  <!-- Slide 4: Why it matters -->
   <section class="slide">
     <div class="slide-header">
       <div>
@@ -339,7 +331,7 @@
         <ul>
           <li>Lower, wider peaks can make a pollutant plume look safer than it is.</li>
           <li>Artificial mixing can hide sharp temperature or stress hot spots.</li>
-          <li>Time-dependent signals, like dye boluses, can look washed out or delayed.</li>
+          <li>Time-dependent signals can look washed out or delayed.</li>
         </ul>
         <p>
           Design decisions are often based on “what is the maximum value?” or “where
@@ -348,18 +340,9 @@
         </p>
       </div>
       <div class="slide-visual">
-        <div>
-          <div class="visual-label">Suggested visual</div>
-          <div class="visual-main">
-            Schematic of a plume or hotspot:
-          </div>
-          <ul class="visual-bullets">
-            <li>Left: narrow, high peak labeled “true physics”.</li>
-            <li>Right: broader, lower peak labeled “with numerical diffusion”.</li>
-          </ul>
-          <div class="visual-note">
-            Connect this directly to a real-world example you care about (pollution, heat, or contrast in blood flow).
-          </div>
+        <img src="dissipation.png" alt="Effect of diffusion on peak values in a flow">
+        <div class="visual-caption">
+          A smeared profile can reduce peak values and spread out where thresholds are crossed.
         </div>
       </div>
     </div>
@@ -367,7 +350,7 @@
     <div class="slide-number">4 / 5</div>
   </section>
 
-  <!-- Slide 5 -->
+  <!-- Slide 5: Takeaway -->
   <section class="slide">
     <div class="slide-header">
       <div>
@@ -388,19 +371,8 @@
         </p>
       </div>
       <div class="slide-visual">
-        <div>
-          <div class="visual-label">Suggested visual</div>
-          <div class="visual-main">
-            Simple “Goldilocks” diagram:
-          </div>
-          <ul class="visual-bullets">
-            <li>Left: “Too diffusive” – very smooth curve.</li>
-            <li>Right: “Too sharp / unstable” – curve with oscillations.</li>
-            <li>Middle: “Balanced” – realistic, stable profile.</li>
-          </ul>
-          <div class="visual-note">
-            This gives you a clear, visual way to end on the idea of engineering trade-offs.
-          </div>
+        <div class="placeholder-box">
+          Diagram placeholder
         </div>
       </div>
     </div>
