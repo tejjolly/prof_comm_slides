@@ -6,13 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
-      --bg: #111217;
-      --card: #181a21;
-      --accent: #e63946;
-      --accent-soft: #3b1f25;
-      --text: #f5f5f7;
-      --muted: #b0b3c0;
-      --radius: 18px;
+      --bg: #ffffff;
+      --card: #f7f7f7;
+      --accent: #a50021;
+      --text: #111111;
+      --muted: #555555;
+      --border: #dddddd;
+      --radius: 16px;
       --max-width: 960px;
     }
 
@@ -23,7 +23,7 @@
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #1d2433 0, #05060a 55%, #020308 100%);
+      background: var(--bg);
       color: var(--text);
       overflow: hidden;
     }
@@ -43,11 +43,10 @@
       height: 100%;
       max-height: 640px;
       margin: 0 auto;
-      background: linear-gradient(145deg, #171821 0%, #101017 50%, #181722 100%);
+      background: var(--card);
       border-radius: var(--radius);
-      box-shadow:
-        0 18px 45px rgba(0, 0, 0, 0.55),
-        0 0 0 1px rgba(255, 255, 255, 0.03);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border);
       padding: 1.5rem 2rem 2rem;
       display: none;
       position: relative;
@@ -73,41 +72,41 @@
     }
 
     .slide-title {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       line-height: 1.25;
       margin: 0.15rem 0 0;
     }
 
     .slide-body {
       display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-      gap: 1.4rem;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 1.2rem;
       height: calc(100% - 3.5rem);
     }
 
     .slide-text {
-      font-size: 1rem;
+      font-size: 0.98rem;
       color: var(--muted);
     }
 
     .slide-text ul {
-      margin: 0 0 0.4rem 1.1rem;
+      margin: 0 0 0.5rem 1.1rem;
       padding: 0;
     }
 
     .slide-text li {
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.35rem;
     }
 
     .slide-text p {
-      margin-top: 0.4rem;
-      margin-bottom: 0.3rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.35rem;
     }
 
     .slide-visual {
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: radial-gradient(circle at top, #25273a 0, #141520 50%, #101119 100%);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #ffffff;
       padding: 0.9rem 1rem;
       font-size: 0.9rem;
       color: var(--muted);
@@ -121,42 +120,40 @@
     .slide-visual video {
       width: 100%;
       max-height: 100%;
-      border-radius: 12px;
+      border-radius: 10px;
       display: block;
       object-fit: contain;
-      background: #05060a;
+      background: #ffffff;
     }
 
     .visual-caption {
-      font-size: 0.78rem;
-      color: #7b7f90;
-      margin-top: 0.45rem;
+      font-size: 0.8rem;
+      color: #777777;
+      margin-top: 0.4rem;
     }
 
-    .mesh-strip {
+    .mesh-column {
       display: flex;
+      flex-direction: column;
       gap: 0.4rem;
-      align-items: center;
-      justify-content: center;
     }
 
-    .mesh-strip img {
-      flex: 1 1 0;
-      max-width: 33%;
+    .mesh-column img {
+      width: 100%;
       height: auto;
       border-radius: 10px;
     }
 
     .placeholder-box {
-      border-radius: 12px;
-      border: 1px dashed rgba(255, 255, 255, 0.25);
-      background: rgba(15, 16, 24, 0.7);
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      background: #fafafa;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.9rem;
-      color: #8a8da0;
+      color: #777777;
     }
 
     .nav-hint {
@@ -164,7 +161,7 @@
       bottom: 0.7rem;
       left: 1.7rem;
       font-size: 0.75rem;
-      color: #777b8e;
+      color: #999999;
     }
 
     .slide-number {
@@ -172,7 +169,7 @@
       bottom: 0.8rem;
       right: 2rem;
       font-size: 0.8rem;
-      color: #777b8e;
+      color: #999999;
     }
 
     .dot-nav {
@@ -189,18 +186,18 @@
       width: 9px;
       height: 9px;
       border-radius: 999px;
-      background: #3b3f55;
+      background: #cccccc;
       cursor: pointer;
       transition: transform 0.12s ease, background 0.12s ease;
     }
 
     .dot.active {
       background: var(--accent);
-      transform: scale(1.35);
+      transform: scale(1.3);
     }
 
     .dot:hover {
-      background: #c64b58;
+      background: #d2647c;
     }
 
     @media (max-width: 800px) {
@@ -213,7 +210,7 @@
         grid-template-rows: auto auto;
       }
       .slide-title {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
       }
     }
   </style>
@@ -221,7 +218,6 @@
 <body>
 
 <div class="deck">
-  <!-- Slide 1: Hook -->
   <section class="slide active">
     <div class="slide-header">
       <div>
@@ -232,13 +228,12 @@
     <div class="slide-body">
       <div class="slide-text">
         <ul>
-          <li>Simulations can blur sharp features that stay sharp in real life.</li>
-          <li>This extra “smearing” comes from the numerics, not the physics.</li>
+          <li>Sharp features can look too “blurred” on the computer.</li>
+          <li>The blur comes from the numerics, not the fluid physics.</li>
         </ul>
         <p>
-          I’ll show how this “numerical diffusion” appears when we solve fluid
-          equations on a computer, and why it matters for the decisions engineers make
-          from CFD results.
+          I’ll show how this extra smearing appears in CFD and why it matters for
+          engineering decisions based on simulation results.
         </p>
       </div>
       <div class="slide-visual">
@@ -252,28 +247,26 @@
     <div class="slide-number">1 / 5</div>
   </section>
 
-  <!-- Slide 2: Grid explanation -->
   <section class="slide">
     <div class="slide-header">
       <div>
         <div class="slide-kicker">How CFD stores fluids</div>
-        <h1 class="slide-title">CFD turns a continuous fluid into a grid of tiny boxes of averaged values.</h1>
+        <h1 class="slide-title">CFD turns a continuous fluid into a grid of tiny boxes.</h1>
       </div>
     </div>
     <div class="slide-body">
       <div class="slide-text">
         <ul>
-          <li>The domain is chopped into many small cells, like pixels or Lego bricks.</li>
-          <li>Each cell carries averaged quantities: velocity, pressure, dye level.</li>
-          <li>At each time step, the solver updates those averages using the equations of motion.</li>
+          <li>The domain is split into many small cells, like pixels.</li>
+          <li>Each cell holds an average velocity, pressure, and concentration.</li>
         </ul>
         <p>
-          This grid-based view is powerful, but it also means the computer only “sees”
-          the fluid in chunks, not with infinite detail.
+          The solver updates those averages in time, so the computer sees the flow
+          as a collection of boxes instead of a perfectly smooth field.
         </p>
       </div>
       <div class="slide-visual">
-        <div class="mesh-strip">
+        <div class="mesh-column">
           <img src="mesh1.png" alt="Example CFD mesh 1">
           <img src="mesh2.png" alt="Example CFD mesh 2">
           <img src="mesh3.jpg" alt="Example CFD mesh 3">
@@ -287,30 +280,28 @@
     <div class="slide-number">2 / 5</div>
   </section>
 
-  <!-- Slide 3: Smearing origin -->
   <section class="slide">
     <div class="slide-header">
       <div>
         <div class="slide-kicker">Where smearing comes from</div>
-        <h1 class="slide-title">Some update methods act like a built-in blur filter on sharp features.</h1>
+        <h1 class="slide-title">Some update methods act like a built-in blur filter.</h1>
       </div>
     </div>
     <div class="slide-body">
       <div class="slide-text">
         <ul>
-          <li>When a sharp front moves across the grid, we must share it between neighboring cells.</li>
-          <li>Simple, stable schemes do this by averaging more than the physics would.</li>
-          <li>The solution gets smoother every time step, even if the real fluid wouldn’t.</li>
+          <li>Sharp fronts are spread across neighboring cells at each step.</li>
+          <li>Simple, stable schemes can smooth things more than the physics would.</li>
         </ul>
         <p>
-          In practice, this means that a sharp dye front or shock wave can look broader and
-          weaker in the simulation than it really is.
+          Over time, the simulated front becomes broader and weaker, even if the real
+          fluid would keep a much sharper edge.
         </p>
       </div>
       <div class="slide-visual">
         <video src="false_diffusion.mp4" controls muted loop></video>
         <div class="visual-caption">
-          Example of a sharp feature becoming smeared over time by numerical diffusion.
+          A sharp feature becoming smeared over time by numerical diffusion.
         </div>
       </div>
     </div>
@@ -318,31 +309,28 @@
     <div class="slide-number">3 / 5</div>
   </section>
 
-  <!-- Slide 4: Why it matters -->
   <section class="slide">
     <div class="slide-header">
       <div>
         <div class="slide-kicker">Why it matters</div>
-        <h1 class="slide-title">Extra numerical blur can mislead engineers about peaks and safety margins.</h1>
+        <h1 class="slide-title">Extra numerical blur can hide peaks and hot spots.</h1>
       </div>
     </div>
     <div class="slide-body">
       <div class="slide-text">
         <ul>
-          <li>Lower, wider peaks can make a pollutant plume look safer than it is.</li>
-          <li>Artificial mixing can hide sharp temperature or stress hot spots.</li>
-          <li>Time-dependent signals can look washed out or delayed.</li>
+          <li>Smeared peaks can make a plume or hotspot look safer than it is.</li>
+          <li>Thresholds can appear in the wrong place or at the wrong time.</li>
         </ul>
         <p>
-          Design decisions are often based on “what is the maximum value?” or “where
-          does this threshold get crossed?” Numerical diffusion can change the answers
-          to those questions.
+          When we base safety margins or treatment choices on peak values and
+          thresholds, numerical diffusion can quietly shift those answers.
         </p>
       </div>
       <div class="slide-visual">
         <img src="dissipation.png" alt="Effect of diffusion on peak values in a flow">
         <div class="visual-caption">
-          A smeared profile can reduce peak values and spread out where thresholds are crossed.
+          A diffused profile has a lower peak and a wider spread than the original.
         </div>
       </div>
     </div>
@@ -350,29 +338,27 @@
     <div class="slide-number">4 / 5</div>
   </section>
 
-  <!-- Slide 5: Takeaway -->
   <section class="slide">
     <div class="slide-header">
       <div>
         <div class="slide-kicker">Takeaway</div>
-        <h1 class="slide-title">Good CFD means controlling numerical artifacts, not just running the code.</h1>
+        <h1 class="slide-title">Good CFD means managing numerical artifacts, not just running the solver.</h1>
       </div>
     </div>
     <div class="slide-body">
       <div class="slide-text">
         <ul>
-          <li>We choose schemes and grids that keep important features as sharp as the physics demands.</li>
-          <li>We balance stability against accuracy—too diffusive or too “wiggly” are both problems.</li>
-          <li>We validate against experiments to tell real physics from numerical side-effects.</li>
+          <li>We tune schemes and grids to keep important features realistic.</li>
+          <li>We check simulations against data to separate physics from artifacts.</li>
         </ul>
         <p>
-          The goal is not just attractive flow pictures, but simulations we can trust when real
-          people and real designs depend on the results.
+          The goal is simulations we can trust when real designs and real patients
+          depend on the numbers coming out of the code.
         </p>
       </div>
       <div class="slide-visual">
         <div class="placeholder-box">
-          Diagram placeholder
+          Space for a simple “too smooth / too wiggly / just right” diagram.
         </div>
       </div>
     </div>
