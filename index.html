@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Numerical Diffusion – 3-Minute Talk</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #111217;
+      --card: #181a21;
+      --accent: #e63946;
+      --accent-soft: #3b1f25;
+      --text: #f5f5f7;
+      --muted: #b0b3c0;
+      --radius: 18px;
+      --max-width: 960px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1d2433 0, #05060a 55%, #020308 100%);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .slide {
+      width: 100%;
+      max-width: var(--max-width);
+      height: 100%;
+      max-height: 640px;
+      margin: 0 auto;
+      background: linear-gradient(145deg, #171821 0%, #101017 50%, #181722 100%);
+      border-radius: var(--radius);
+      box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.55),
+        0 0 0 1px rgba(255, 255, 255, 0.03);
+      padding: 1.5rem 2rem 2rem;
+      display: none;
+      position: relative;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      gap: 1rem;
+    }
+
+    .slide-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .slide-title {
+      font-size: 1.8rem;
+      line-height: 1.25;
+      margin: 0.15rem 0 0;
+    }
+
+    .slide-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 1.4rem;
+      height: calc(100% - 3.5rem);
+    }
+
+    .slide-text {
+      font-size: 1rem;
+      color: var(--muted);
+    }
+
+    .slide-text ul {
+      margin: 0 0 0.4rem 1.1rem;
+      padding: 0;
+    }
+
+    .slide-text li {
+      margin-bottom: 0.3rem;
+    }
+
+    .slide-text p {
+      margin-top: 0.4rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .slide-visual {
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: radial-gradient(circle at top, #25273a 0, #141520 50%, #101119 100%);
+      padding: 0.9rem 1rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .visual-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .visual-main {
+      font-size: 0.9rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .visual-bullets {
+      margin: 0.2rem 0 0.2rem 1rem;
+      padding: 0;
+    }
+
+    .visual-bullets li {
+      margin-bottom: 0.25rem;
+    }
+
+    .visual-note {
+      font-size: 0.78rem;
+      color: #7b7f90;
+      margin-top: 0.4rem;
+    }
+
+    .nav-hint {
+      position: absolute;
+      bottom: 0.7rem;
+      left: 1.7rem;
+      font-size: 0.75rem;
+      color: #777b8e;
+    }
+
+    .slide-number {
+      position: absolute;
+      bottom: 0.8rem;
+      right: 2rem;
+      font-size: 0.8rem;
+      color: #777b8e;
+    }
+
+    .dot-nav {
+      position: fixed;
+      bottom: 0.7rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.4rem;
+      z-index: 5;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #3b3f55;
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.12s ease;
+    }
+
+    .dot.active {
+      background: var(--accent);
+      transform: scale(1.35);
+    }
+
+    .dot:hover {
+      background: #c64b58;
+    }
+
+    @media (max-width: 800px) {
+      .slide {
+        padding: 1.3rem 1.3rem 1.6rem;
+        max-height: none;
+      }
+      .slide-body {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+      }
+      .slide-title {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="deck">
+  <!-- Slide 1 -->
+  <section class="slide active">
+    <div class="slide-header">
+      <div>
+        <div class="slide-kicker">Numerical diffusion</div>
+        <h1 class="slide-title">Even a realistic-looking fluid simulation can be secretly wrong.</h1>
+      </div>
+    </div>
+    <div class="slide-body">
+      <div class="slide-text">
+        <ul>
+          <li>Simulations can blur sharp features that stay sharp in real life.</li>
+          <li>This extra “smearing” comes from the numerics, not the physics.</li>
+        </ul>
+        <p>
+          I’ll show how this “numerical diffusion” appears when we solve fluid
+          equations on a computer, and why it matters for the decisions engineers make
+          from CFD results.
+        </p>
+      </div>
+      <div class="slide-visual">
+        <div>
+          <div class="visual-label">Suggested visual</div>
+          <div class="visual-main">
+            Side-by-side comparison:
+          </div>
+          <ul class="visual-bullets">
+            <li>Left: a sharp streak of dye in water (photo or drawing).</li>
+            <li>Right: the same streak with a noticeable blur applied.</li>
+          </ul>
+          <div class="visual-note">
+            Use this to introduce the idea that “pretty” doesn’t always mean “physically correct.”
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-hint">Use ← / → to move between slides.</div>
+    <div class="slide-number">1 / 5</div>
+  </section>
+
+  <!-- Slide 2 -->
+  <section class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="slide-kicker">How CFD stores fluids</div>
+        <h1 class="slide-title">CFD turns a continuous fluid into a grid of tiny boxes of averaged values.</h1>
+      </div>
+    </div>
+    <div class="slide-body">
+      <div class="slide-text">
+        <ul>
+          <li>The domain is chopped into many small cells, like pixels or Lego bricks.</li>
+          <li>Each cell carries averaged quantities: velocity, pressure, dye level.</li>
+          <li>At each time step, the solver updates those averages using the equations of motion.</li>
+        </ul>
+        <p>
+          This grid-based view is powerful, but it also means the computer only “sees”
+          the fluid in chunks, not with infinite detail.
+        </p>
+      </div>
+      <div class="slide-visual">
+        <div>
+          <div class="visual-label">Suggested visual</div>
+          <div class="visual-main">
+            Cartoon of a pipe or rectangular domain overlaid with a square grid.
+          </div>
+          <ul class="visual-bullets">
+            <li>Draw a 5×5 or 8×8 grid; mark one cell as an example control volume.</li>
+            <li>Add small arrows in a few cells to show averaged velocities.</li>
+          </ul>
+          <div class="visual-note">
+            The goal is to make the “grid of boxes with averages” idea intuitive without any equations.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-hint">Use ← / → to move between slides.</div>
+    <div class="slide-number">2 / 5</div>
+  </section>
+
+  <!-- Slide 3 -->
+  <section class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="slide-kicker">Where smearing comes from</div>
+        <h1 class="slide-title">Some update methods act like a built-in blur filter on sharp features.</h1>
+      </div>
+    </div>
+    <div class="slide-body">
+      <div class="slide-text">
+        <ul>
+          <li>When a sharp front moves across the grid, we must share it between neighboring cells.</li>
+          <li>Simple, stable schemes do this by averaging more than the physics would.</li>
+          <li>The solution gets smoother every time step, even if the real fluid wouldn’t.</li>
+        </ul>
+        <p>
+          In practice, this means that a sharp dye front or shock wave can look broader and
+          weaker in the simulation than it really is.
+        </p>
+      </div>
+      <div class="slide-visual">
+        <div>
+          <div class="visual-label">Suggested visual</div>
+          <div class="visual-main">
+            1D plot of concentration vs. distance:
+          </div>
+          <ul class="visual-bullets">
+            <li>Black curve: an ideal “top-hat” with vertical sides.</li>
+            <li>Red curve: a rounded, smeared version after several time steps.</li>
+          </ul>
+          <div class="visual-note">
+            Label the curves “ideal” and “numerically diffused” to make the comparison explicit.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-hint">Use ← / → to move between slides.</div>
+    <div class="slide-number">3 / 5</div>
+  </section>
+
+  <!-- Slide 4 -->
+  <section class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="slide-kicker">Why it matters</div>
+        <h1 class="slide-title">Extra numerical blur can mislead engineers about peaks and safety margins.</h1>
+      </div>
+    </div>
+    <div class="slide-body">
+      <div class="slide-text">
+        <ul>
+          <li>Lower, wider peaks can make a pollutant plume look safer than it is.</li>
+          <li>Artificial mixing can hide sharp temperature or stress hot spots.</li>
+          <li>Time-dependent signals, like dye boluses, can look washed out or delayed.</li>
+        </ul>
+        <p>
+          Design decisions are often based on “what is the maximum value?” or “where
+          does this threshold get crossed?” Numerical diffusion can change the answers
+          to those questions.
+        </p>
+      </div>
+      <div class="slide-visual">
+        <div>
+          <div class="visual-label">Suggested visual</div>
+          <div class="visual-main">
+            Schematic of a plume or hotspot:
+          </div>
+          <ul class="visual-bullets">
+            <li>Left: narrow, high peak labeled “true physics”.</li>
+            <li>Right: broader, lower peak labeled “with numerical diffusion”.</li>
+          </ul>
+          <div class="visual-note">
+            Connect this directly to a real-world example you care about (pollution, heat, or contrast in blood flow).
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-hint">Use ← / → to move between slides.</div>
+    <div class="slide-number">4 / 5</div>
+  </section>
+
+  <!-- Slide 5 -->
+  <section class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="slide-kicker">Takeaway</div>
+        <h1 class="slide-title">Good CFD means controlling numerical artifacts, not just running the code.</h1>
+      </div>
+    </div>
+    <div class="slide-body">
+      <div class="slide-text">
+        <ul>
+          <li>We choose schemes and grids that keep important features as sharp as the physics demands.</li>
+          <li>We balance stability against accuracy—too diffusive or too “wiggly” are both problems.</li>
+          <li>We validate against experiments to tell real physics from numerical side-effects.</li>
+        </ul>
+        <p>
+          The goal is not just attractive flow pictures, but simulations we can trust when real
+          people and real designs depend on the results.
+        </p>
+      </div>
+      <div class="slide-visual">
+        <div>
+          <div class="visual-label">Suggested visual</div>
+          <div class="visual-main">
+            Simple “Goldilocks” diagram:
+          </div>
+          <ul class="visual-bullets">
+            <li>Left: “Too diffusive” – very smooth curve.</li>
+            <li>Right: “Too sharp / unstable” – curve with oscillations.</li>
+            <li>Middle: “Balanced” – realistic, stable profile.</li>
+          </ul>
+          <div class="visual-note">
+            This gives you a clear, visual way to end on the idea of engineering trade-offs.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-hint">Use ← / → to move between slides.</div>
+    <div class="slide-number">5 / 5</div>
+  </section>
+</div>
+
+<div class="dot-nav">
+  <div class="dot active" data-slide="0"></div>
+  <div class="dot" data-slide="1"></div>
+  <div class="dot" data-slide="2"></div>
+  <div class="dot" data-slide="3"></div>
+  <div class="dot" data-slide="4"></div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dots = Array.from(document.querySelectorAll('.dot'));
+  let current = 0;
+
+  function showSlide(index) {
+    if (index < 0 || index >= slides.length) return;
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      showSlide(current + 1);
+    } else if (e.key === 'ArrowLeft') {
+      showSlide(current - 1);
+    }
+  });
+
+  dots.forEach((dot, idx) => {
+    dot.addEventListener('click', () => showSlide(idx));
+  });
+</script>
+
+</body>
+</html>
